@@ -6,8 +6,9 @@
 <style>
 :root{--ink:#0b0d1f;--milk:#f4f8ff;--hot:#ff5c8a;--ice:#6ee7ff;--gold:#ffd166}
 *{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
-html,body{height:100%;overflow:hidden;background:#05060f;touch-action:none;font-family:'Press Start 2P',monospace;color:var(--milk)}
-canvas{position:fixed;inset:0;width:100%;height:100%;image-rendering:pixelated}
+html,body{height:100%;overflow:hidden;background:#05060f;touch-action:manipulation;font-family:'Press Start 2P',monospace;color:var(--milk)}
+#c{position:fixed;inset:0;width:100%;height:100%;image-rendering:pixelated;touch-action:none}
+#box canvas{display:block;margin:0 auto;max-width:100%}
 #hud{position:fixed;top:max(8px,env(safe-area-inset-top));left:8px;right:8px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;font-size:9px;pointer-events:none;text-shadow:2px 2px #000}
 #milk{display:flex;gap:4px;font-size:18px}
 #milk span{filter:grayscale(1) brightness(.5);opacity:.6}
@@ -18,21 +19,16 @@ canvas{position:fixed;inset:0;width:100%;height:100%;image-rendering:pixelated}
 #kit{display:none;gap:3px}
 #kit.on{display:flex}
 #kit i{display:block;width:10px;height:10px;border:2px solid #ffffff44;background:transparent}
-#score{font-size:8px;color:#6ee7ff;letter-spacing:1px}
 @media (pointer:coarse){#keys{display:none}}
 @media (max-height:700px){#box{padding:14px;font-size:10px;line-height:1.6}}
+@media (max-height:560px){#box{padding:9px;font-size:9px;line-height:1.5;max-height:96vh}h3{font-size:10px;margin-bottom:3px}p{margin:2px 0}.big{font-size:11px}#box canvas{width:auto!important;height:82px!important;display:block;margin:0 auto}button{padding:7px 10px;margin:4px 4px 0 0;font-size:10px}button.tap{font-size:14px;padding:10px 0}.cook{margin:5px 0;height:14px}}
 #lives span{color:#39405e}
 #lives span.on{color:#ff5c8a;text-shadow:0 0 7px #ff5c8a99}
-.lb{width:100%;border-collapse:collapse;font-size:9px;margin:10px 0}
-.lb th{color:#6ee7ff;text-align:left;padding:2px 4px;border-bottom:2px solid #ffffff33;font-weight:400}
-.lb td{padding:4px;border-bottom:1px solid #ffffff18}
-.lb tr.top td{color:#ffd166}
-#nm{width:100%;padding:10px;margin:10px 0;background:#05060f;border:3px solid #fff;color:#fff;font-family:'Press Start 2P',monospace;font-size:11px;text-align:center;text-transform:uppercase}
 #mute{pointer-events:auto;z-index:7;font:inherit;font-size:9px;padding:6px 7px;margin:0;background:#0009;color:#fff;border:2px solid #ffffff55;box-shadow:none}
 #mute:active{transform:none;box-shadow:none}
-#joy{position:fixed;left:max(18px,env(safe-area-inset-left));bottom:max(24px,env(safe-area-inset-bottom));width:120px;height:120px;border-radius:50%;border:3px solid #fff5;background:#ffffff14;display:none}
+#joy{touch-action:none;position:fixed;left:max(18px,env(safe-area-inset-left));bottom:max(24px,env(safe-area-inset-bottom));width:120px;height:120px;border-radius:50%;border:3px solid #fff5;background:#ffffff14;display:none}
 #knob{position:absolute;left:36px;top:36px;width:44px;height:44px;border-radius:50%;background:#fffc;border:3px solid #fff;pointer-events:none}
-#act{position:fixed;right:max(22px,env(safe-area-inset-right));bottom:max(36px,env(safe-area-inset-bottom));width:84px;height:84px;border-radius:50%;border:4px solid #fff;background:var(--hot);color:#fff;font:inherit;font-size:20px;display:none;box-shadow:0 6px 0 #a02050}
+#act{position:fixed;right:max(18px,env(safe-area-inset-right));bottom:max(30px,env(safe-area-inset-bottom));width:96px;height:96px;border-radius:50%;border:4px solid #fff;background:var(--hot);color:#fff;font:inherit;font-size:12px;line-height:1;letter-spacing:1px;display:none;box-shadow:0 6px 0 #a02050}
 #act.near{animation:pulse .7s infinite alternate}
 @keyframes pulse{to{transform:scale(1.12);background:var(--gold);color:#000}}
 .touch #joy,.touch #act{display:block}
@@ -40,14 +36,14 @@ canvas{position:fixed;inset:0;width:100%;height:100%;image-rendering:pixelated}
 .touch #keys{display:none}
 #modal{position:fixed;inset:0;background:#000b;display:grid;place-items:center;padding:14px;z-index:5}
 #modal[hidden]{display:none}
-#box{width:min(440px,100%);max-height:92vh;overflow-y:auto;padding:20px;background:var(--ink);border:4px solid var(--milk);box-shadow:6px 6px 0 #000,inset 0 0 0 4px var(--ink),inset 0 0 0 6px #6ee7ff55;font-size:11px;line-height:1.8}
+#box{width:min(440px,100%);max-height:92vh;overflow-y:auto;touch-action:pan-y;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:20px;background:var(--ink);border:4px solid var(--milk);box-shadow:6px 6px 0 #000,inset 0 0 0 4px var(--ink),inset 0 0 0 6px #6ee7ff55;font-size:11px;line-height:1.8}
 h3{color:var(--gold);font-size:13px;margin-bottom:10px}
 p{margin:8px 0}
 .big{font-size:14px;color:var(--ice)}
 button{font:inherit;font-size:11px;color:#000;background:var(--milk);border:0;padding:12px 14px;margin:8px 8px 0 0;box-shadow:0 4px 0 #7a8bb0;cursor:pointer}
 button:active{transform:translateY(3px);box-shadow:0 1px 0 #7a8bb0}
 button.main{background:var(--gold);box-shadow:0 4px 0 #a07a1a}
-button.tap{width:100%;font-size:24px;padding:30px 0;background:var(--hot);color:#fff;box-shadow:0 6px 0 #a02050;margin-right:0}
+button.tap{width:100%;font-size:22px;padding:26px 0;background:var(--hot);color:#fff;box-shadow:0 6px 0 #a02050;margin-right:0;position:sticky;bottom:-2px;z-index:3;border-top:3px solid #00000055}
 .meter{height:18px;background:#222;border:3px solid #fff}.meter i{display:block;height:100%;width:0;background:var(--ice)}
 .vbar{position:relative;width:46px;height:160px;margin:10px auto;background:#222;border:3px solid #fff}
 .vbar i{position:absolute;left:0;right:0;bottom:0;height:0;background:var(--ice)}
@@ -76,9 +72,9 @@ button.tap{width:100%;font-size:24px;padding:30px 0;background:var(--hot);color:
 </style></head>
 <body>
 <canvas id="c"></canvas>
-<div id="hud"><div id="hl"><div id="milk"></div><div id="lives"></div><div id="score"></div><div id="kit"></div></div><div id="hr"><div id="hint"></div><button id="mute">SOUND ON</button></div></div>
+<div id="hud"><div id="hl"><div id="milk"></div><div id="lives"></div><div id="kit"></div></div><div id="hr"><div id="hint"></div><button id="mute">SOUND ON</button></div></div>
 <div id="joy"><div id="knob"></div></div>
-<button id="act">A</button>
+<button id="act">TALK</button>
 <div id="keys">WASD / ARROWS MOVE &nbsp; E / SPACE INTERACT &nbsp; M SOUND</div>
 <div id="toast"></div>
 <div id="sub" hidden><small id="tm"></small><b id="who"></b><span id="txt"></span><button id="skp">SKIP</button></div>
@@ -116,6 +112,7 @@ const WW=960,WH=720;let W,H;
 function resize(){const sc=Math.max(2,Math.floor(Math.min(innerWidth,innerHeight)/170));W=Math.ceil(innerWidth/sc);H=Math.ceil(innerHeight/sc);cv.width=dk.width=W;cv.height=dk.height=H;g.imageSmoothingEnabled=false}
 addEventListener('resize',resize);resize();
 if(matchMedia('(pointer:coarse)').matches||'ontouchstart' in window)document.body.classList.add('touch');
+const COARSE=document.body.classList.contains('touch');
 
 /* ---------- WORLD ---------- */
 function rng(s){return()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
@@ -129,7 +126,7 @@ const KIT=['socks','spikes','shorts','tee','vest'];   // race kit pieces, in the
 const worn={shoes:1};                                 // trainers on from the start, so laces can come undone
 let gown=1,shadesT=0,lives=LIVES,stumble=0,laceCD=0;
 let chloeFails=0,kitClock=0,rain=0,rainCD=RAIN.first,shadeCD=0,floorCD=14,runStart=0;
-let ill=0,fast=0,score=0;
+let ill=0,fast=0;
 const FLOOR=[];
 const FLOOR_KINDS=[
  {t:'steak',   msg:'STEAK. PROTEIN.',life:1,w:6},
@@ -233,9 +230,9 @@ function kitHud(){const el=$('kit');if(!kitStarted){el.classList.remove('on');re
  el.innerHTML=KIT.map(t=>`<i style="background:${worn[t]?KC[t][0]:'transparent'};border-color:${worn[t]?'#fff':'#ffffff44'}"></i>`).join('')}
 function hud(){$('milk').innerHTML=[0,1,2,3,4].map(i=>`<span class="${i<milk?'on':''}">🥛</span>`).join('');
  $('lives').innerHTML=Array.from({length:LIVES},(_,i)=>`<span class="${i<lives?'on':''}">♥</span>`).join('');
- $('score').textContent='SCORE '+score}hud();
+}hud();
 function say(name,lines,cb){let i=0,ended=0;open();const show=()=>{box.innerHTML=`<h3>${name}</h3><p>${lines[i]}</p><button class="main" id="nx">${i<lines.length-1?'NEXT':'OK'}</button>`;$('nx').onclick=()=>{if(ended)return;if(++i<lines.length)show();else{ended=1;close();cb&&cb()}}};show()}
-function award(id){done[id]=1;milk++;score+=100;hud();beep(988,.15);setTimeout(()=>beep(1318,.25),150);toast('🥛 MILK '+milk+'/5');
+function award(id){done[id]=1;milk++;hud();beep(988,.15);setTimeout(()=>beep(1318,.25),150);toast('🥛 MILK '+milk+'/5');
  if(milk<5&&Math.random()<ILL_CHANCE)setTimeout(illTick,ILL_DELAY*1000);
  if(milk>=5&&lives>0)setTimeout(finishRun,1000)}
 function illTick(){if(milk>=5)return;if(paused||scene){setTimeout(illTick,600);return}
@@ -253,12 +250,16 @@ function jm(e){const b=jEl.getBoundingClientRect();let dx=(e.clientX-b.left-60)/
 jEl.addEventListener('pointerdown',e=>{jid=e.pointerId;jEl.setPointerCapture(jid);jm(e)});
 jEl.addEventListener('pointermove',e=>{if(e.pointerId===jid)jm(e)});
 ['pointerup','pointercancel'].forEach(t=>jEl.addEventListener(t,()=>{jid=null;joy.x=joy.y=0;kn.style.transform=''}));
-$('act').addEventListener('click',e=>{e.preventDefault();interact()});
+function tapOn(el,fn){if(!el)return;let lf=0;
+ const fire=e=>{if(e&&e.type!='click'&&e.cancelable)e.preventDefault();const n=performance.now();if(n-lf<120)return;lf=n;fn()};
+ ['pointerdown','touchstart','click'].forEach(k=>el.addEventListener(k,fire,{passive:false}))}
+tapOn($('act'),()=>interact());
 cv.addEventListener('click',e=>{if(paused||scene)return;const b=cv.getBoundingClientRect(),k=W/b.width,wx=CX+(e.clientX-b.left)*k,wy=CY+(e.clientY-b.top)*k;
  const s=ST.find(s=>wx>s.x-16&&wx<s.x+16&&wy>s.y-36&&wy<s.y+8&&!(chase&&chase.s===s));
  if(s){if(s===near)interact();else toast('WALK CLOSER')}});
 
 /* ---------- MOVEMENT ---------- */
+const lightR=()=>56*(shadesT>0?2.4:1)*(rain>0?.55:1);
 const free=(x,y)=>x>10&&x<WW-10&&y>20&&y<WH-8&&!SOL.some(([a,b,w,h])=>x+4>a&&x-4<a+w&&y>b&&y-4<b+h);
 const move=(o,dx,dy)=>{if(free(o.x+dx,o.y))o.x+=dx;if(free(o.x,o.y+dy))o.y+=dy};
 function update(dt){if(paused)return;
@@ -272,6 +273,7 @@ function update(dt){if(paused)return;
  if(shadesT>0)shadesT=Math.max(0,shadesT-dt);
  for(let i=SHADE_ITEMS.length-1;i>=0;i--){const it=SHADE_ITEMS[i];
   if(Math.hypot(it.x-P.x,it.y-P.y)<14){SHADE_ITEMS.splice(i,1);shadesT=SHADE_SECONDS;beep(1200,.12);setTimeout(()=>beep(1600,.14),120);toast('SHADES ON: '+SHADE_SECONDS+'s')}}
+ const LR0=lightR();SHADE_ITEMS.forEach(it=>{if(Math.hypot(it.x-P.x,it.y-P.y)<LR0)it.seen=1});if(kit&&kit.on)kit.items.forEach(it=>{if(Math.hypot(it.x-P.x,it.y-P.y)<LR0)it.seen=1});
  laceCD=Math.max(0,laceCD-dt);
  if(laceCD<=0&&lives>0&&!stumble&&!chase&&!scene&&P.st&&Math.random()<LACE.rate*dt)laceHit();
  if(ill>0)ill=Math.max(0,ill-dt);
@@ -284,7 +286,7 @@ function update(dt){if(paused)return;
  if(floorCD<=0&&FLOOR.length<FLOOR_MAX){spawnFloor(1);floorCD=18+Math.random()*14}
  for(let i=FLOOR.length-1;i>=0;i--){const o=FLOOR[i];if(Math.hypot(o.x-P.x,o.y-P.y)<12){FLOOR.splice(i,1);floorHit(o)}}
  if(kit&&kit.on){kitClock-=dt;if(kitClock<=0){kitClock=KIT_CLOCK;toast('THE WIND TOOK THEM AGAIN');startKit()}}
- if(kit&&kit.on){kit.items=kit.items.filter(it=>{if(shadesT>0&&Math.hypot(it.x-P.x,it.y-P.y)<13){worn[it.t]=1;score+=50;hud();beep(880,.08);toast('PUT ON '+it.t.toUpperCase());kitHud();return false}return true});
+ if(kit&&kit.on){kit.items=kit.items.filter(it=>{if(Math.hypot(it.x-P.x,it.y-P.y)<13){worn[it.t]=1;hud();beep(880,.08);toast('PUT ON '+it.t.toUpperCase());kitHud();return false}return true});
   if(!kit.items.length){kit.on=false;setTimeout(()=>say('Coach Kyle',['Look at that. Full kit, no excuses.','Here is your milk.'],()=>award('kit')),300)}}
  near=ST.find(s=>!(chase&&s===chase.s)&&Math.hypot(s.x-P.x,s.y-P.y)<24)||null;
  $('act').classList.toggle('near',!!near)}
@@ -383,8 +385,8 @@ function song(){open();
  const win=()=>{if(fin)return;fin=1;stop();const t=$('tr');if(t)t.textContent='NAILED IT!';setTimeout(()=>{close();award('sing')},700)};
  const skip=()=>{if(!$('sk')){box.insertAdjacentHTML('beforeend','<button id="sk">SKIP</button>');$('sk').onclick=win}};
  CL=stop;
- box.innerHTML='<h3>Sam</h3><p>First, allow your microphone. You will sing in a moment!</p><p id="tr"></p><button class="main" id="mic">ALLOW MIC</button><button id="lq">LEAVE</button>';
- $('lq').onclick=close;
+ box.innerHTML='<h3>Sam</h3><p>First, allow your microphone. You will sing in a moment!</p><p id="tr">On a phone the mic needs https and a yes to the permission box. No mic? Skip it.</p><button class="main" id="mic">ALLOW MIC</button><button id="sk">SKIP</button><button id="lq">LEAVE</button>';
+ $('lq').onclick=close;$('sk').onclick=()=>win();
  $('mic').onclick=async()=>{
   SONG.muted=true;const u=SONG.play().then(()=>{SONG.pause();SONG.currentTime=0}).catch(()=>{}).then(()=>{SONG.muted=!!muted});
   try{stream=await navigator.mediaDevices.getUserMedia({audio:true});ac=new AudioContext();an=ac.createAnalyser();an.fftSize=512;ac.createMediaStreamSource(stream).connect(an)}
@@ -416,11 +418,12 @@ function omelette(){open();
  box.innerHTML=`<h3>Union Grill</h3><p id="rd" class="big">OMELETTE 1 / 5</p>
   <canvas id="pan" width="200" height="96" style="width:100%;image-rendering:pixelated;background:#1a1530;border:3px solid #fff"></canvas>
   <div class="cook"><b id="zn"></b><i id="mk"></i></div>
-  <p id="msg">STOP THE PAN IN THE GREEN</p>
-  <button class="tap" id="fl">STOP!</button><button id="lq">LEAVE</button>`;
+  <p id="msg">TAP STOP WHEN THE MARKER IS IN THE GREEN</p>
+  <button class="tap" id="fl">STOP THE PAN!</button><button id="lq">LEAVE</button>`;
  const c=$('pan').getContext('2d');
- let r=0,p=0,zone=.5,state='run',last=performance.now(),won=0;
- const zw=()=>OM_ZONE[r],dur=()=>OM_DUR[r];
+ let r=0,p=0,zone=.5,state='run',t0=performance.now(),won=0,raf=0;
+ const zw=()=>Math.min(.55,OM_ZONE[r]*(COARSE?1.5:1)),dur=()=>OM_DUR[r]*(COARSE?1.2:1);
+ const prog=()=>Math.min(1,(performance.now()-t0)/1000/dur());
  const R2=(cc,x,y,w,h)=>{c.fillStyle=cc;c.fillRect(Math.round(x),Math.round(y),w,h)};
  const pan=col=>{c.clearRect(0,0,200,96);
   R2('#2a2140',0,70,200,26);R2('#ff5c8a55',60,76,80,4);
@@ -431,28 +434,30 @@ function omelette(){open();
   if(lift>.15){R2('#ffffff55',84,Math.round(yy)-2,10,2)}else{R2('#ffffff44',84,49,12,2);R2('#00000022',110,53,10,2)}
   for(let i=0;i<3;i++){const tt=(T+i*.33)%1;R2('#ffffff'+(state=='bad'?'22':'44'),88+i*14+Math.sin(T*3+i)*3,46-tt*22,3,3)}};
  const colr=()=>['#fff3b0','#ffe07a','#f7c948','#e8a72e','#c8862a','#a86a1f'][Math.min(5,r)];
- function round(){if(!$('zn'))return;p=0;state='run';last=performance.now();
+ function round(){if(!$('zn'))return;p=0;state='run';t0=performance.now();
   zone=zw()/2+.06+Math.random()*(.88-zw());
   $('zn').style.left=((zone-zw()/2)*100)+'%';$('zn').style.width=(zw()*100)+'%';
   $('mk').style.left='0%';
   $('rd').textContent='OMELETTE '+(r+1)+' / '+OMELETTES;
-  $('msg').textContent='STOP THE PAN IN THE GREEN'}
+  $('msg').textContent='TAP STOP WHEN THE MARKER IS IN THE GREEN'}
  const fail=why=>{if(state!='run'||won||!$('msg'))return;state='bad';beep(160,.25);
   $('msg').textContent=why+'  BACK TO OMELETTE 1';
   setTimeout(()=>{r=0;round()},1100)};
  const stop=()=>{if(state!='run'||won||!$('msg'))return;
+  p=prog();
   if(Math.abs(p-zone)<=zw()/2){state='ok';beep(1100,.12);r++;
    if(r>=OMELETTES){won=1;$('rd').textContent='FIVE FROM FIVE';$('msg').textContent='PERFECT SERVICE!';setTimeout(()=>{close();award('omelette')},900);return}
    $('msg').textContent='PERFECT! NEXT ONE IS FASTER';
    setTimeout(round,650)}
   else fail(p>zone?'BURNT!':'RAW!')};
- const iv=setInterval(()=>{const n=performance.now(),dt=Math.min(.05,(n-last)/1000);last=n;
-  if(state=='run'){p+=dt/dur();if(p>=1){p=1;fail('BURNT!')}}
+ const loop=()=>{if(!$('mk'))return;
+  if(state=='run'){p=prog();if(p>=1){p=1;fail('BURNT!')}}
   $('mk').style.left=(Math.min(1,p)*100)+'%';
-  pan(state=='bad'?'#6b3a1a':colr())},16);
- $('fl').onpointerdown=e=>{e.preventDefault();stop()};
+  pan(state=='bad'?'#6b3a1a':colr());
+  raf=requestAnimationFrame(loop)};
+ tapOn($('fl'),stop);tapOn($('pan'),stop);
  KB={down:e=>{if((e.key==' '||e.key=='Enter')&&!e.repeat)stop()}};
- $('lq').onclick=close;CL=()=>clearInterval(iv);round()}
+ $('lq').onclick=close;CL=()=>cancelAnimationFrame(raf);round();loop()}
 
 const fmtT=t=>{const m=Math.floor(t/60),s=t-m*60;return m+':'+(s<10?'0':'')+s.toFixed(2)};
 function run(){open();const k=RACE.pb/RACE.ghostSeconds;
@@ -499,7 +504,7 @@ function run(){open();const k=RACE.pb/RACE.ghostSeconds;
   $('en').style.background=e<25?'#ff5c8a':(e<55?'#ffd166':'#6ee7ff');
   if(wall<=0)$('gap').textContent=n+' / '+RACE.taps+' STRIDES   '+Math.abs((gu-u)*RACE.pb).toFixed(2)+'s '+(u>=gu?'AHEAD':'BEHIND');
   if(u>=1)finish(1,t);else if(gu>=1)finish(0,t)};
- $('tp').onpointerdown=e=>{e.preventDefault();tap()};
+ tapOn($('tp'),tap);
  KB={down:e=>{if((e.key==' '||e.key=='Enter')&&!e.repeat)tap()}};
  $('lq').onclick=close;iv=setInterval(tick,16);CL=()=>clearInterval(iv)}
 
@@ -507,7 +512,7 @@ function run(){open();const k=RACE.pb/RACE.ghostSeconds;
 const DIRS=['E','SE','S','SW','W','NW','N','NE'];let lastHint='';
 function setHint(){let t='';
  if(chase)t=`CATCH HER! ${Math.ceil(chase.t)}s`;
- else{const tg=[...ST.filter(s=>!done[s.id]&&!s.hidden),...(kit&&kit.on&&shadesT>0?kit.items:[]),...(shadesT>0?[]:SHADE_ITEMS)];
+ else{const tg=[...ST.filter(s=>!done[s.id]&&!s.hidden),...(kit&&kit.on?kit.items:[]),...(shadesT>0?[]:SHADE_ITEMS)];
   if(tg.length){const n=tg.reduce((a,b)=>Math.hypot(a.x-P.x,a.y-P.y)<Math.hypot(b.x-P.x,b.y-P.y)?a:b);
    const i=((Math.round(Math.atan2(n.y-P.y,n.x-P.x)/(Math.PI/4))%8)+8)%8;t=(kit&&kit.on?`KIT ${KIT.length-kit.items.length}/5  ${Math.ceil(Math.max(0,kitClock))}s<br>`:'')+`NEAREST: ${DIRS[i]} ${Math.round(Math.hypot(n.x-P.x,n.y-P.y)/4)}m`}}
  if(t!==lastHint){$('hint').innerHTML=t;lastHint=t}}
@@ -515,7 +520,7 @@ function lbl(t,x,y,col){g.font='6px "Press Start 2P",monospace';g.textAlign='cen
 function bubT(x,y,t){const w=t.length*6+8;x=Math.round(x-w/2);y=Math.round(y);r('#fff',x,y,w,11);r('#fff',x+w/2-2,y+11,4,3);g.font='6px "Press Start 2P",monospace';g.textAlign='left';g.fillStyle='#111';g.fillText(t,x+4,y+8)}
 function postUI(cx,cy){if(scene||paused)return;const gs=ST.find(s=>s.id=='girl');
  if(!done.girl&&!gs.met&&!chase&&Math.hypot(gs.x-P.x,gs.y-P.y)<100)bubT(gs.x-cx,gs.y-cy-40+Math.sin(T*6)*1.5,'HI!');
- if(near)lbl('PRESS TO INTERACT',near.x-cx,near.y-cy+12,'#ffd166')}
+ if(near)lbl(COARSE?'TAP TO TALK':'PRESS TO INTERACT',near.x-cx,near.y-cy+12,'#ffd166')}
 function draw(){
  const tk=scene&&scene.phase=='talk',fx=tk?(P.x+scene.s.x)/2:P.x,fy=tk?(P.y+scene.s.y)/2:P.y;
  let cx=Math.round(Math.max(0,Math.min(WW-W,fx-W/2))),cy=Math.round(Math.max(0,Math.min(WH-H,fy-10-H/2)));
@@ -527,7 +532,7 @@ function draw(){
   if(s.prop)s.prop(s.x+(s.px||0),s.y);
   if(s.look){const sp=speak(s.id=='girl'?'girl':'-'),b=sp?Math.abs(Math.sin(T*14))*1.5:0;person(s.x,s.y-b,s.look,s.d||0,chase&&chase.s===s||scene&&scene.phase=='flee'&&scene.s===s);if(sp)bubble(s.x,s.y-b)}
   if(s===near&&!scene){r('#ffd166',s.x-1,s.y-32,2,5);r('#ffd166',s.x-1,s.y-26,2,2)}}]));
- kit&&shadesT>0&&kit.items.forEach(i=>E.push([i.y,()=>icon(i.t,i.x,i.y-2-Math.abs(Math.sin(T*3))*2)]));
+ kit&&kit.on&&kit.items.forEach(i=>E.push([i.y,()=>icon(i.t,i.x,i.y-2-Math.abs(Math.sin(T*3))*2)]));
  FLOOR.forEach(i=>E.push([i.y,()=>floorIcon(i.t,i.x,i.y-1-Math.abs(Math.sin(T*2.5))*1.5)]));
  SHADE_ITEMS.forEach(i=>E.push([i.y,()=>shadesIcon(i.x,i.y-2-Math.abs(Math.sin(T*3))*2)]));
  E.push([P.y,()=>{const sp=speak('me'),b=sp?Math.abs(Math.sin(T*14))*1.5:0;person(P.x,P.y-b,ME,P.d,P.st);if(sp)bubble(P.x,P.y-b)}]);
@@ -538,41 +543,27 @@ function draw(){
  const sx=fx-cx,sy=fy-cy-8,fl=Math.sin(T*5),boost=(shadesT>0?2.4:1)*(rain>0?.55:1);
  [[56,.25],[47,.35],[38,.5],[29,.7],[20,1]].forEach(([rr,a])=>{dg.fillStyle=`rgba(0,0,0,${a})`;dg.beginPath();dg.arc(sx,sy,rr*boost+fl,0,7);dg.fill()});
  g.drawImage(dk,0,0);
+ const LRd=56*boost;
+ {g.setTransform(1,0,0,1,-cx,-cy);
+  const mem=(it,fn)=>{if(it.seen&&Math.hypot(it.x-fx,it.y-fy)>LRd){g.globalAlpha=.55;fn();g.globalAlpha=1}};
+  if(kit&&kit.on)kit.items.forEach(i=>mem(i,()=>icon(i.t,i.x,i.y-2-Math.abs(Math.sin(T*3))*2)));
+  SHADE_ITEMS.forEach(i=>mem(i,()=>shadesIcon(i.x,i.y-2-Math.abs(Math.sin(T*3))*2)));
+  g.setTransform(1,0,0,1,0,0)}
  if(ill>0){const a=(.06+.05*Math.sin(T*4)).toFixed(3);
   r('rgba(140,200,70,'+a+')',0,0,W,H);
   for(let i=0;i<8;i++){const yy=((i*H/8)+((T*70)%(H/8)))%H;r('rgba(170,235,130,.05)',0,yy,W,9)}}
  if(rain>0)for(let i=0;i<46;i++){const rx=(i*53+((T*300)|0))%W,ry=(i*97+((T*470)|0))%H;r('#9fd4ff33',rx,ry,1,5)}
  postUI(cx,cy);if(Math.floor(T*3)%2){const tw=(x,y)=>{const a=Math.round(x-cx),b=Math.round(y-cy-30);if(a>0&&a<W&&b>0&&b<H){r('#ffd166',a-1,b,2,2);r('#fff6',a-3,b+1,6,0.01);r('#ffd16688',a,b-2,1,6)}};
-  ST.forEach(s=>!s.hidden&&(!done[s.id]||chase&&chase.s===s)&&tw(s.x,s.y));kit&&shadesT>0&&kit.items.forEach(i=>Math.hypot(i.x-P.x,i.y-P.y)<110&&tw(i.x,i.y));SHADE_ITEMS.forEach(i=>Math.hypot(i.x-P.x,i.y-P.y)<140&&tw(i.x,i.y))}}
+  ST.forEach(s=>!s.hidden&&(!done[s.id]||chase&&chase.s===s)&&tw(s.x,s.y));kit&&kit.on&&kit.items.forEach(i=>Math.hypot(i.x-P.x,i.y-P.y)<110&&tw(i.x,i.y));SHADE_ITEMS.forEach(i=>Math.hypot(i.x-P.x,i.y-P.y)<140&&tw(i.x,i.y))}}
 let last=performance.now();
 function frame(n){const dt=Math.min(.05,(n-last)/1000);last=n;T+=dt;update(dt);sceneTick(dt);draw();setHint();requestAnimationFrame(frame)}
 requestAnimationFrame(frame);
-/* ---------- LEADERBOARD ---------- */
-const LB_KEY='milkquest.lb.v1';
-const esc=t=>String(t).replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
-function lbAll(){try{const a=JSON.parse(localStorage.getItem(LB_KEY)||'[]');return Array.isArray(a)?a:[]}catch(e){return[]}}
-function lbAdd(n,t,sc){const a=lbAll();a.push({n:n,t:t,s:sc||0});a.sort((x,y)=>x.t-y.t);try{localStorage.setItem(LB_KEY,JSON.stringify(a.slice(0,25)))}catch(e){}}
-function lbHTML(){const a=lbAll();
- if(!a.length)return '<p style="font-size:9px;color:#6ee7ff">NO FINISHES YET. BE THE FIRST.</p>';
- return '<table class="lb"><tr><th>#</th><th>NAME</th><th>SCORE</th><th>TIME</th></tr>'+a.slice(0,10).map((e,i)=>
-  `<tr class="${i?'':'top'}"><td>${i+1}</td><td>${esc(e.n||'ANON')}</td><td>${e.s||0}</td><td>${fmtT(e.t)}</td></tr>`).join('')+'</table>'}
-function showBoard(back){open();box.innerHTML='<h3>LEADERBOARD</h3>'+lbHTML()+`<button class="main" id="cl">${back?'BACK':'CLOSE'}</button>`;
- $('cl').onclick=()=>{if(back)startScreen();else close()}}
-function boardAgain(){open();box.innerHTML='<h3>LEADERBOARD</h3>'+lbHTML()+'<button class="main" onclick="location.reload()">PLAY AGAIN</button>'}
+/* ---------- FINISH ---------- */
 function finishRun(){const secs=(performance.now()-runStart)/1000;
- score+=lives*150+Math.max(0,Math.round(900-secs*2));hud();open();let last='';
- try{last=localStorage.getItem('milkquest.name')||''}catch(e){}
- box.innerHTML=`<h3>YOU DID IT!</h3><p class="big">🥛🥛🥛🥛🥛</p><p>SCORE ${score}</p><p>TIME ${fmtT(secs)}</p>
-  <input id="nm" maxlength="12" placeholder="YOUR NAME" value="${esc(last)}">
-  <button class="main" id="sv">SAVE TO LEADERBOARD</button><button id="sk">SKIP</button>`;
- $('nm').focus();
- $('nm').onkeydown=e=>{if(e.key=='Enter'){e.preventDefault();$('sv').click()}};
- $('sv').onclick=()=>{const n=(($('nm').value||'').trim().slice(0,12))||'ANON';
-  try{localStorage.setItem('milkquest.name',n)}catch(e){}lbAdd(n,secs,score);boardAgain()};
- $('sk').onclick=boardAgain}
-function startScreen(){open();box.innerHTML='<h3>MILK QUEST</h3><p>Loughborough, after dark. You are in your dressing gown, out of milk, and out of luck.</p><p>Beat the 5 challenges for <b>5 glasses of milk</b> 🥛. You have <b>3 lives</b>.</p><p style="font-size:9px;color:#6ee7ff">Follow the NEAREST hint and the twinkling stars. Coach Kyle has your race kit. Mind your laces.</p><button class="main" id="st0">START</button><button id="lb0">LEADERBOARD</button>';
- $('st0').onclick=()=>{beep(660,.1);runStart=performance.now();close()};
- $('lb0').onclick=()=>showBoard(1)}
+ open();
+ box.innerHTML=`<h3>YOU DID IT!</h3><p class="big">🥛🥛🥛🥛🥛</p><p>Five glasses of milk. Job done.</p><p>TIME ${fmtT(secs)}</p><button class="main" onclick="location.reload()">PLAY AGAIN</button>`}
+function startScreen(){open();box.innerHTML='<h3>MILK QUEST</h3><p>Loughborough, after dark. You are in your dressing gown, out of milk, and out of luck.</p><p>Beat the 5 challenges for <b>5 glasses of milk</b> 🥛. You have <b>3 lives</b>.</p><p style="font-size:9px;color:#6ee7ff">'+(COARSE?'Use the stick to walk. Tap <b>TALK</b> when someone is close.':'WASD to walk, E to talk.')+' Follow the NEAREST hint and the twinkling stars. Coach Kyle has your race kit. Mind your laces.</p><button class="main" id="st0">START</button>';
+ $('st0').onclick=()=>{beep(660,.1);runStart=performance.now();close()}}
 
 spawnShades();spawnFloor(9);placeLecturer();startScreen();
 </script>
